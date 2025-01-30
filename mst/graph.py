@@ -25,6 +25,8 @@ class Graph:
         with open(path) as f:
             return np.loadtxt(f, delimiter=',')
 
+
+# Method uses Prim's algorithm to construct the minimum spanning tree of the graph
     def construct_mst(self):
 
         '''
@@ -43,11 +45,16 @@ class Graph:
             π[v] ← ce; pred[v] ← e
         '''
 
+        # S ← ∅, T ← ∅.
+        #s ← any node in V.
+
         S = set()
-        T = set()
         V = self.adj_mat.shape[0]
 
         s = 0
+
+        #FOREACH v ≠ s : π[v] ← ∞, pred[v] ← null; π[s] ← 0.
+        #Create an empty priority queue pq.
         pred = [None] * V  
         pi = [float('inf')] * V  
         pi[s] = 0
@@ -55,10 +62,13 @@ class Graph:
 
         self.mst = np.zeros_like(self.adj_mat)
 
+    #WHILE (IS-NOT-EMPTY(pq))
         while pq:
+
+            #u ← DEL-MIN(pq).
             cost, u = heapq.heappop(pq)
         
-   
+            #S ← S ∪ { u }, T ← T ∪ { pred[u] }.
             if u in S:
                 continue
         
@@ -70,11 +80,17 @@ class Graph:
                 self.mst[u][pred[u]] = self.adj_mat[u][pred[u]]  
                 self.mst[pred[u]][u] = self.adj_mat[u][pred[u]]  
         
+        #FOREACH edge e = (u, v) ∈ E with v ∉ S :
             for v in range(V):
+
+               
                 if v not in S and self.adj_mat[u][v] != 0:  
                     new_cost = self.adj_mat[u][v]
-                
+                 
+                    #IF (ce < π[v])
                     if new_cost < pi[v]:
+                        #DECREASE-KEY(pq, v, ce).
+                        #π[v] ← ce; pred[v] ← e
                         pi[v] = new_cost
                         pred[v] = u
                         heapq.heappush(pq, (new_cost, v))   
