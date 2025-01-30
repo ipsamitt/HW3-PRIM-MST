@@ -26,20 +26,57 @@ class Graph:
             return np.loadtxt(f, delimiter=',')
 
     def construct_mst(self):
-        """
-    
-        TODO: Given `self.adj_mat`, the adjacency matrix of a connected undirected graph, implement Prim's 
-        algorithm to construct an adjacency matrix encoding the minimum spanning tree of `self.adj_mat`. 
-            
-        `self.adj_mat` is a 2D numpy array of floats. Note that because we assume our input graph is
-        undirected, `self.adj_mat` is symmetric. Row i and column j represents the edge weight between
-        vertex i and vertex j. An edge weight of zero indicates that no edge exists. 
-        
-        This function does not return anything. Instead, store the adjacency matrix representation
-        of the minimum spanning tree of `self.adj_mat` in `self.mst`. We highly encourage the
-        use of priority queues in your implementation. Refer to the heapq module, particularly the 
-        `heapify`, `heappop`, and `heappush` functions.
 
-        """
-        print(self.adj_mat)
-        self.mst = None
+        '''
+            Following psuedocode
+            S ← ∅, T ← ∅.
+            s ← any node in V.
+            FOREACH v ≠ s : π[v] ← ∞, pred[v] ← null; π[s] ← 0.
+            Create an empty priority queue pq.
+            FOREACH v ∈ V : INSERT(pq, v, π[v]).
+            WHILE (IS-NOT-EMPTY(pq))
+            u ← DEL-MIN(pq).
+            S ← S ∪ { u }, T ← T ∪ { pred[u] }.
+            FOREACH edge e = (u, v) ∈ E with v ∉ S :
+            IF (ce < π[v])
+            DECREASE-KEY(pq, v, ce).
+            π[v] ← ce; pred[v] ← e
+        '''
+
+        S = set()
+        T = set()
+        V = self.adj_mat.shape[0]
+
+        s = 0
+        pred = [None] * V  
+        pi = [float('inf')] * V  
+        pi[s] = 0
+        pq = [(0, 0)]  
+
+        self.mst = np.zeros_like(self.adj_mat)
+
+        while pq:
+            cost, u = heapq.heappop(pq)
+        
+   
+            if u in S:
+                continue
+        
+        
+            S.add(u)
+        
+      
+            if pred[u] is not None:
+                self.mst[u][pred[u]] = self.adj_mat[u][pred[u]]  
+                self.mst[pred[u]][u] = self.adj_mat[u][pred[u]]  
+        
+            for v in range(V):
+                if v not in S and self.adj_mat[u][v] != 0:  
+                    new_cost = self.adj_mat[u][v]
+                
+                    if new_cost < pi[v]:
+                        pi[v] = new_cost
+                        pred[v] = u
+                        heapq.heappush(pq, (new_cost, v))   
+                
+

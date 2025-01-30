@@ -8,6 +8,8 @@ def check_mst(adj_mat: np.ndarray,
               mst: np.ndarray, 
               expected_weight: int, 
               allowed_error: float = 0.0001):
+  
+
     """
     
     Helper function to check the correctness of the adjacency matrix encoding an MST.
@@ -34,6 +36,32 @@ def check_mst(adj_mat: np.ndarray,
         for j in range(i+1):
             total += mst[i, j]
     assert approx_equal(total, expected_weight), 'Proposed MST has incorrect expected weight'
+
+
+
+    #edges count check
+    num_edges = np.sum(mst != 0) // 2  
+    num_nodes = adj_mat.shape[0]
+    #make sure there are nodes -1 edges
+    assert num_edges == num_nodes - 1, 'Proposed MST has incorrect number of edges'
+
+    #connectivity check
+
+    visited = set()
+    #dfs to make sure you have visited all nodes and are connective
+    def dfs(node):
+        visited.add(node)
+        for v in range(adj_mat.shape[0]):
+            if mst[node][v] != 0 and v not in visited:
+                dfs(v)
+    
+    dfs(0)
+    assert len(visited) == num_nodes, 'Proposed MST is not connected'
+
+
+
+
+
 
 
 def test_mst_small():
