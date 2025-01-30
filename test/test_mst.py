@@ -99,4 +99,22 @@ def test_mst_student():
     TODO: Write at least one unit test for MST construction.
     
     """
-    pass
+    #try test file
+    file_path = './data/toy_1.csv'
+    g = Graph(file_path)
+    g.construct_mst()
+    check_mst(g.adj_mat, g.mst, 70)
+
+
+    #try test file
+    file_path = './data/toy_2.csv'
+    g = Graph(file_path)
+    g.construct_mst()
+    check_mst(g.adj_mat, g.mst, 13)
+
+    #make sure it throws an error for incorrect weights
+    try:
+        check_mst(g.adj_mat, g.mst, 15)
+    except AssertionError:
+        pass
+
