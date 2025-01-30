@@ -41,4 +41,5 @@ class Graph:
         `heapify`, `heappop`, and `heappush` functions.
 
         """
+        print(self.adj_mat)
         self.mst = None
